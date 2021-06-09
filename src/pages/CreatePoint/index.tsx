@@ -1,13 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 
+import api from '../../services/api';
 import './styles.css';
 
 import logo from '../../assets/logo.svg';
 
 const CreatePoint = () => {
+    const [items, setItems] = useState([]);
+
+    useEffect(() => {
+        api.get('items').then(response => {
+            setItems(response.data);
+        })
+    }, [])
+
     return (
         <div id="page-create-point">
             <header>
@@ -65,10 +74,10 @@ const CreatePoint = () => {
                     </legend>
 
                     <MapContainer center={[-23.5389016, -46.912541]} zoom={15}>
-                    <TileLayer 
-                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"/>
-                    <Marker position={[-23.5389016, -46.912541]}></Marker>
+                        <TileLayer
+                            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                        <Marker position={[-23.5389016, -46.912541]}></Marker>
                     </MapContainer>
 
                     <div className="field-group">
@@ -94,32 +103,15 @@ const CreatePoint = () => {
                         <span>Selecione um ou mais ítens abaixo</span>
                     </legend>
                     <ul className="items-grid">
-                        <li>
-                            <img src="http://localhost:3333/uploads/oleo.svg" alt="Teste" />
-                            <span>Óleo de Cozinha</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/oleo.svg" alt="Teste" />
-                            <span>Óleo de Cozinha</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/oleo.svg" alt="Teste" />
-                            <span>Óleo de Cozinha</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/oleo.svg" alt="Teste" />
-                            <span>Óleo de Cozinha</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/oleo.svg" alt="Teste" />
-                            <span>Óleo de Cozinha</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/oleo.svg" alt="Teste" />
-                            <span>Óleo de Cozinha</span>
-                        </li>
+                        {items.map(item => (
+                            <li>
+                                <img src="http://localhost:3333/uploads/oleo.svg" alt="Teste" />
+                                <span>Óleo de Cozinha</span>
+                            </li>
+                        ))}
+
                     </ul>
-          
+
                 </fieldset>
 
                 <button type="submit">
