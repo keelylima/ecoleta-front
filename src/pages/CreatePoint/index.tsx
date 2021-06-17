@@ -1,5 +1,5 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet'
@@ -39,6 +39,8 @@ const CreatePoint = () => {
         email: '',
         whatsapp: '',
     })
+
+    const history = useHistory();
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(position => {
@@ -113,6 +115,33 @@ const CreatePoint = () => {
 
     }
 
+    async function handleSubmit(event: FormEvent) {
+        event.preventDefault();
+
+        const { name, email, whatsapp } = formData;
+        const uf = selectedUf;
+        const city = selectedCity;
+        const [latitude, longitude] = selectedPostion;
+        const items = selectedItems;
+
+        const data = { 
+            name,
+            email,
+            whatsapp,
+            uf,
+            city,
+            latitude,
+            longitude,
+            items
+        }
+
+        await api.post('points', data);
+        
+        
+
+        history.push('/');
+    }
+
     return (
         <div id="page-create-point">
             <header>
@@ -124,7 +153,7 @@ const CreatePoint = () => {
                 </Link>
             </header>
 
-            <form>
+            <form onSubmit={handleSubmit}>
                 <h1>Cadastro do <br /> ponto de coleta</h1>
 
                 <fieldset>
